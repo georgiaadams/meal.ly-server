@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const logger = require("morgan");
@@ -7,10 +8,9 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const MongoStore = require("connect-mongo")(session);
 const cors = require("cors");
-require("dotenv").config();
 
 const authRouter = require("./routes/auth.router");
-const userRouter = require("./routes/users.router");
+const userRouter = require("./routes/user.router");
 const providerRouter = require("./routes/provider.router");
 
 // MONGOOSE CONNECTION
@@ -59,7 +59,6 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // ROUTER MIDDLEWARE
 app.use("/auth", authRouter);
-
 app.use("/api/user", userRouter);
 app.use("/api/provider", providerRouter);
 

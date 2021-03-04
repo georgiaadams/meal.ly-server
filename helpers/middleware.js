@@ -24,5 +24,5 @@ exports.validateLogin = (req, res, next) => {
 // exports = {
 //   isLoggedIn,
 //   isNotLoggedIn,
-//   validationLogin,
-// }
+//   validateLogin,
+// };
