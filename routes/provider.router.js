@@ -19,13 +19,12 @@ providerRouter.post("/offers", (req, res, next) => {
     companyName,
     status: "new",
   })
-    .then((createdOffer) => {
-      res.status(201).json(createdOffer);
-    })
     .then((newOfferDocument) => {
-      Provider.findByIdAndUpdate(providerId, {
-        $push: { offers: newOfferDocument._id },
-      }).then((theResponse) => {
+      Provider.findByIdAndUpdate(
+        providerId,
+        { $push: { offers: newOfferDocument._id } },
+        { new: true }
+      ).then((theResponse) => {
         res.status(201).json(theResponse);
       });
     })
