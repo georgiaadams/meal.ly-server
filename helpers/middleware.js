@@ -12,7 +12,7 @@ exports.isNotLoggedIn = (req, res, next) => {
   else next(createError(403)); // new Error({message: '', statusCode: 403})
 };
 
-exports.validationLogin = (req, res, next) => {
+exports.validateLogin = (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -24,5 +24,5 @@ exports.validationLogin = (req, res, next) => {
 // exports = {
 //   isLoggedIn,
 //   isNotLoggedIn,
-//   validationLogin,
+//   validateLogin,
 // };

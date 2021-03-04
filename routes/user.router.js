@@ -1,22 +1,22 @@
 const express = require("express");
-const router = express.Router();
+const userRouter = express.Router();
+const mongoose = require("mongoose");
 
 const User = require("../models/user.model");
 const Offer = require("../models/offer.model");
 
 const { isLoggedIn } = require("../helpers/middleware");
 
-router.get("/offers/status/:status", isLoggedIn, async (req, res, next) => {
-  const { status } = req.params;
+userRouter.get("/offers/status/new", isLoggedIn, async (req, res, next) => {
   try {
-    const allOffers = await Offer.find({ status });
-    res.status(200).json(allOffers);
+    const newOffers = await Offer.find({ status: "new" });
+    res.status(200).json(newOffers);
   } catch (error) {
     res.status(400).json(error);
   }
 });
 
-router.get("/offers/:id", isLoggedIn, (req, res, next) => {
+userRouter.get("/offers/:id", isLoggedIn, (req, res, next) => {
   const { id } = req.params;
 
   const invalidId = !mongoose.Types.ObjectId.isValid(id);
@@ -33,12 +33,51 @@ router.get("/offers/:id", isLoggedIn, (req, res, next) => {
     });
 });
 
-router.get(
+userRouter.get(
   "/offers/status/ready-requested",
   isLoggedIn,
-  (req, res, next) => {}
+  async (req, res, next) => {
+    try {
+      const pendingOffers = await Offer.find({
+        status: "ready",
+        status: "requested",
+      });
+      res.status(200).json(pendingOffers);
+    } catch (error) {
+      res.status(400).json(error);
+    }
+  }
 );
 
-router.get("offers/status/completed", isLoggedIn, (req, res, next) => {});
+userRouter.get(
+  "/offers/status/completed",
+  isLoggedIn,
+  async (req, res, next) => {
+    try {
+      const completedOffers = await Offer.find({ status: "completed" });
+      res.status(200).json(completedOffers);
+    } catch (error) {
+      res.status(400).json(error);
+    }
+  }
+);
 
-module.exports = router;
+// router.get("/offers/status/:status", isLoggedIn, async (req, res, next) => {
+//   const { status } = req.params;
+
+//   const validStatus = ["new", "requested", "ready", "completed"].includes(
+//     status
+//   );
+
+//   if (!validStatus)
+//     return res.status(400).json({ message: "Not a valid status" });
+
+//   try {
+//     const allOffers = await Offer.find({ status });
+//     res.status(200).json(allOffers);
+//   } catch (error) {
+//     res.status(400).json(error);
+//   }
+// });
+
+module.exports = userRouter;

@@ -11,14 +11,14 @@ const User = require("../models/user.model");
 const {
   isLoggedIn,
   isNotLoggedIn,
-  validationLogin,
+  validateLogin,
 } = require("../helpers/middleware");
 
 // POST '/auth/signup'
 router.post(
-  "/signup",
+  "/user/signup",
   isNotLoggedIn,
-  validationLogin,
+  validateLogin,
   async (req, res, next) => {
     console.log("im here");
 
@@ -56,9 +56,9 @@ router.post(
 
 // POST '/auth/login'
 router.post(
-  "/login",
+  "/user/login",
   isNotLoggedIn,
-  validationLogin,
+  validateLogin,
   async (req, res, next) => {
     try {
       const { email, password } = req.body;
@@ -95,7 +95,7 @@ router.get("/logout", isLoggedIn, (req, res, next) => {
 });
 
 // GET '/auth/me'
-router.get("/me", isLoggedIn, (req, res, next) => {
+router.get("/user/me", isLoggedIn, (req, res, next) => {
   const currentUserData = req.session.currentUser;
 
   res.status(200).json(currentUserData);
