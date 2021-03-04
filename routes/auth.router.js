@@ -56,7 +56,7 @@ router.post(
 // POST '/auth/signup'
 router.post("/signup", isNotLoggedIn, validateLogin, async (req, res, next) => {
   try {
-    const { companyName, email, password, phoneNumber, address } = req.body;
+    const { companyName, address, phoneNumber, email, password } = req.body;
     const user = await Provider.findOne({ email });
     if (user) {
       return next(createError(400)); // Bad Request
@@ -65,8 +65,8 @@ router.post("/signup", isNotLoggedIn, validateLogin, async (req, res, next) => {
     const hashPass = await bcrypt.hash(password, salt);
     const newUser = await Provider.create({
       companyName,
-      phoneNumber,
       address,
+      phoneNumber,
       email,
       password: hashPass,
     });
@@ -143,7 +143,7 @@ router.get("/logout", isLoggedIn, (req, res, next) => {
 });
 
 // GET '/auth/me'
-router.get("/user/me", isLoggedIn, (req, res, next) => {
+router.get("/me", isLoggedIn, (req, res, next) => {
   const currentUserData = req.session.currentUser;
 
   res.status(200).json(currentUserData);
