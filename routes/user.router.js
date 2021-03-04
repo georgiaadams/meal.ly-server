@@ -3,7 +3,7 @@ const userRouter = express.Router();
 const mongoose = require("mongoose");
 
 const User = require("../models/user.model");
-const Offer = require("../models/offer.model");
+const Offer = require("../models/offer");
 
 const { isLoggedIn } = require("../helpers/middleware");
 

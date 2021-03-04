@@ -11,6 +11,7 @@ const cors = require("cors");
 
 const authRouter = require("./routes/auth.router");
 const userRouter = require("./routes/user.router");
+const providerRouter = require("./routes/provider.router");
 
 // MONGOOSE CONNECTION
 mongoose
@@ -59,6 +60,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // ROUTER MIDDLEWARE
 app.use("/auth", authRouter);
 app.use("/api/user", userRouter);
+app.use("/api/provider", providerRouter);
 
 // ERROR HANDLING
 //  Catch 404 and respond with error message
