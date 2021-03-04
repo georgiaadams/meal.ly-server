@@ -65,10 +65,10 @@ router.post("/signup", isNotLoggedIn, validateLogin, async (req, res, next) => {
     const hashPass = await bcrypt.hash(password, salt);
     const newUser = await Provider.create({
       companyName,
-      phoneNumber,
-      address,
       email,
       password: hashPass,
+      phoneNumber,
+      address,
     });
     newUser.password = "*";
     req.session.currentUser = newUser; // triggers the creation of session and the cookie with session id
@@ -143,7 +143,7 @@ router.get("/logout", isLoggedIn, (req, res, next) => {
 });
 
 // GET '/auth/me'
-router.get("/user/me", isLoggedIn, (req, res, next) => {
+router.get("/me", isLoggedIn, (req, res, next) => {
   const currentUserData = req.session.currentUser;
 
   res.status(200).json(currentUserData);
