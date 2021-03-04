@@ -6,20 +6,21 @@ const bcrypt = require("bcrypt");
 
 const saltRounds = 10;
 const User = require("../models/user.model");
+const Provider = require("../models/provider");
 
 
 
 // HELPER FUNCTIONS
-const { isLoggedIn, isNotLoggedIn, validateAuthData } = require("../helpers/middleware");
+const { isLoggedIn, isNotLoggedIn, validateLogin } = require("../helpers/middleware");
 
 
 
 // POST '/auth/signup'
-router.post('/signup', isNotLoggedIn, validateAuthData, async (req, res, next) => {
+router.post('/signup', isNotLoggedIn, validateLogin, async (req, res, next) => {
   try {
-    const { username, password } = req.body;
+    const { companyName, email, password, phoneNumber, address } = req.body;
 
-    const user = await User.findOne({ username });
+    const user = await Provider.findOne({ email });
 
     if (user) { 
       return next(createError(400)); // Bad Request
@@ -28,7 +29,7 @@ router.post('/signup', isNotLoggedIn, validateAuthData, async (req, res, next) =
     const salt = await bcrypt.genSalt(saltRounds);
     const hashPass = await bcrypt.hash(password, salt);
 
-    const newUser = await User.create({ username, password: hashPass });
+    const newUser = await Provider.create({ companyName, phoneNumber, address, email, password: hashPass });
 
     newUser.password = "*";
 
@@ -48,11 +49,11 @@ router.post('/signup', isNotLoggedIn, validateAuthData, async (req, res, next) =
 
 
 // POST '/auth/login'
-router.post('/login', isNotLoggedIn, validateAuthData, async (req, res, next) => {
+router.post('/login', isNotLoggedIn, validateLogin, async (req, res, next) => {
   try {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
     
-    const user = await User.findOne({ username });
+    const user = await Provider.findOne({ email });
     if (!user) return next(createError(404));  // Bad Request
 
     const passwordCorrect = await bcrypt.compare(password, user.password);
