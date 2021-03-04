@@ -23,9 +23,11 @@ providerRouter.post("/offers", (req, res, next) => {
       res.status(201).json(createdOffer);
     })
     .then((newOfferDocument) => {
-      Provider.findByIdAndUpdate(providerId, {
-        $push: { offers: newOfferDocument._id },
-      }).then((theResponse) => {
+      Provider.findByIdAndUpdate(
+        providerId,
+        { $push: { offers: newOfferDocument._id } },
+        { new: true }
+      ).then((theResponse) => {
         res.status(201).json(theResponse);
       });
     })
@@ -43,7 +45,7 @@ providerRouter.get("/offers", (req, res, next) => {
   Provider.findById(providerId)
     .populate("offers")
     .then((provider) => {
-      const offers = provider.offers;
+      const offers = { offers: provider.offers };
       res.status(201).json(offers);
     })
     .catch((err) => {
