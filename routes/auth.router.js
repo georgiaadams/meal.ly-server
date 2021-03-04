@@ -56,7 +56,7 @@ router.post(
 // POST '/auth/signup'
 router.post("/signup", isNotLoggedIn, validateLogin, async (req, res, next) => {
   try {
-    const { companyName, email, password, phoneNumber, address } = req.body;
+    const { companyName, address, phoneNumber, email, password } = req.body;
     const user = await Provider.findOne({ email });
     if (user) {
       return next(createError(400)); // Bad Request
@@ -65,6 +65,8 @@ router.post("/signup", isNotLoggedIn, validateLogin, async (req, res, next) => {
     const hashPass = await bcrypt.hash(password, salt);
     const newUser = await Provider.create({
       companyName,
+      address,
+      phoneNumber,
       email,
       password: hashPass,
       phoneNumber,

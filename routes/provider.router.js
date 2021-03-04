@@ -42,7 +42,7 @@ providerRouter.get("/offers", (req, res, next) => {
   Provider.findById(providerId)
     .populate("offers")
     .then((provider) => {
-      const offers = provider.offers;
+      const offers = { offers: provider.offers };
       res.status(201).json(offers);
     })
     .catch((err) => {
