@@ -9,7 +9,7 @@ const { isLoggedIn } = require("../helpers/middleware");
 
 userRouter.get("/offers/status/new", isLoggedIn, async (req, res, next) => {
   try {
-    const newOffers = await Offer.find({ status: "new" });
+    const newOffers = await Offer.find({ status: "new" }); // showing all new offers
     res.status(200).json(newOffers);
   } catch (error) {
     res.status(400).json(error);
