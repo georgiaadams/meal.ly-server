@@ -1,9 +1,7 @@
 const express = require("express");
 const userRouter = express.Router();
-const mongoose = require("mongoose");
 
-const User = require("../models/user.model");
-const Offer = require("../models/offer");
+// This router is included as a boilerplate example
 
 const { isLoggedIn } = require("../helpers/middleware");
 
