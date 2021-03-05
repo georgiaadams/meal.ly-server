@@ -69,6 +69,8 @@ router.post("/signup", isNotLoggedIn, validateLogin, async (req, res, next) => {
       phoneNumber,
       email,
       password: hashPass,
+      phoneNumber,
+      address,
     });
     newUser.password = "*";
     req.session.currentUser = newUser; // triggers the creation of session and the cookie with session id
