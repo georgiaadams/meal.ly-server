@@ -82,15 +82,19 @@ providerRouter.put("/offers/:id", (req, res, next) => {
     return;
   }
 
-  Offer.findByIdAndUpdate(id, {
-    content,
-    quantity,
-    date,
-    pickupSlot,
-    companyName,
-  })
-    .then(() => {
-      res.status(201).send();
+  Offer.findByIdAndUpdate(
+    id,
+    {
+      content,
+      quantity,
+      date,
+      pickupSlot,
+      companyName,
+    },
+    { new: true }
+  )
+    .then((updatedOffer) => {
+      res.status(201).send(updatedOffer);
     })
     .catch((err) => {
       res.status(400).json(err);
