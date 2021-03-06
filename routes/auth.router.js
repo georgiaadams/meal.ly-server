@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt");
 
 const saltRounds = 10;
 const User = require("../models/user.model");
-const Provider = require("../models/provider");
+const Provider = require("../models/provider.model");
 
 // HELPER FUNCTIONS
 const {

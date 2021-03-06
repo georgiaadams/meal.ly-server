@@ -2,13 +2,13 @@ const express = require("express");
 const mongoose = require("mongoose");
 const providerRouter = express.Router();
 
-const Provider = require("../models/provider");
-const Offer = require("../models/offer");
+const Provider = require("../models/provider.model");
+const Offer = require("../models/offer.model");
 
 // POST '/api/provider/offers' => add a new offer
 
 providerRouter.post("/offers", (req, res, next) => {
-  const { content, quantity, date, pickupSlot, companyName } = req.body;
+  const { content, quantity, date, pickupSlot, companyName, image } = req.body;
   const { _id: providerId } = req.session.currentUser;
 
   Offer.create({
@@ -17,6 +17,7 @@ providerRouter.post("/offers", (req, res, next) => {
     date,
     pickupSlot,
     companyName,
+    image,
     status: "new",
   })
     .then((newOfferDocument) => {
@@ -75,7 +76,7 @@ providerRouter.get("/offers/:id", (req, res) => {
 
 providerRouter.put("/offers/:id", (req, res, next) => {
   const { id } = req.params;
-  const { content, quantity, date, pickupSlot, companyName } = req.body;
+  const { content, quantity, date, pickupSlot, companyName, image } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     res.status(400).json({ message: "Specified id is not valid" });
@@ -88,6 +89,7 @@ providerRouter.put("/offers/:id", (req, res, next) => {
     date,
     pickupSlot,
     companyName,
+    image,
   })
     .then(() => {
       res.status(201).send();
