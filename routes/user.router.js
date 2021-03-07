@@ -3,6 +3,7 @@ const userRouter = express.Router();
 const mongoose = require("mongoose");
 const Offer = require("../models/offer.model");
 const User = require("../models/user.model");
+const Provider = require("../models/provider.model");
 
 // This router is included as a boilerplate example
 
@@ -63,22 +64,28 @@ userRouter.get(
   }
 );
 
-// router.get("/offers/status/:status", isLoggedIn, async (req, res, next) => {
-//   const { status } = req.params;
+userRouter.put("/offers/status/update", isLoggedIn, async (req, res, next) => {
+  // offer id, user id, provider id
+  try {
+    const { offerId, comments, pickupSlot } = req.body;
+    const updatedOffer = await Offer.findByIdAndUpdate(
+      offerId,
+      {
+        status: "requested",
+        comments,
+        pickupSlot,
+      },
+      { new: true }
+    );
+    await User.findByIdAndUpdate(req.session.currentUser._id, {
+      $push: { offers: updatedOffer._id },
+    });
 
-//   const validStatus = ["new", "requested", "ready", "completed"].includes(
-//     status
-//   );
-
-//   if (!validStatus)
-//     return res.status(400).json({ message: "Not a valid status" });
-
-//   try {
-//     const allOffers = await Offer.find({ status });
-//     res.status(200).json(allOffers);
-//   } catch (error) {
-//     res.status(400).json(error);
-//   }
-// });
+    res.status(200).json(updatedOffer);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json(error);
+  }
+});
 
 module.exports = userRouter;
