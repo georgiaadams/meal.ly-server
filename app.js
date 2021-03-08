@@ -33,7 +33,11 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: [process.env.PUBLIC_DOMAIN],
+    origin: [
+      process.env.PUBLIC_DOMAIN,
+      "http://meal-ly.herokuapp.com",
+      "https://meal-ly.herokuapp.com",
+    ],
   })
 );
 
@@ -64,6 +68,12 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/provider", providerRouter);
+
+// ROUTE FOR SERVING REACT APP (index.html)
+app.use((req, res, next) => {
+  // If no previous routes match the request, send back the React app.
+  res.sendFile(__dirname + "/public/index.html");
+});
 
 // ERROR HANDLING
 //  Catch 404 and respond with error message
