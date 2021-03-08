@@ -51,6 +51,26 @@ providerRouter.get("/offers", (req, res, next) => {
     });
 });
 
+providerRouter.put("/offers/status/update", async (req, res, next) => {
+  try {
+    const { offerId } = req.body;
+    const updatedOffer = await Offer.findByIdAndUpdate(
+      offerId,
+      {
+        status: "ready",
+      },
+      { new: true }
+    );
+    await Provider.findByIdAndUpdate(req.session.currentUser._id, {
+      $push: { offers: updatedOffer._id },
+    });
+
+    res.status(200).json(updatedOffer);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json(error);
+  }
+});
 // GET '/api/provider/offers/:id'  => get a specific offer by id
 
 providerRouter.get("/offers/:id", (req, res) => {
