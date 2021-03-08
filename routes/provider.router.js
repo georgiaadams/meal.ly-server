@@ -120,13 +120,16 @@ providerRouter.put("/offers/:id", (req, res, next) => {
 
 providerRouter.delete("/offers/:id", (req, res) => {
   const { id } = req.params;
+  const { _id: providerId } = req.session.currentUser;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     res.status(400).json({ message: "Specified id is not valid" });
     return;
   }
 
-  Offer.findByIdAndRemove(id)
+  Provider.findByIdAndUpdate(providerId, {$pull: { offers: id }}, {new: true}).then(() => {
+
+    Offer.findByIdAndRemove(id)
     .then(() => {
       res
         .status(201) //  Accepted
@@ -135,6 +138,8 @@ providerRouter.delete("/offers/:id", (req, res) => {
     .catch((err) => {
       res.status(400).json(err);
     });
+
+  }).catch((err) => {res.status(400).json(err)});
 });
 
 module.exports = providerRouter;
