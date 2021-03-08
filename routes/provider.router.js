@@ -61,9 +61,6 @@ providerRouter.put("/offers/status/update", async (req, res, next) => {
       },
       { new: true }
     );
-    await Provider.findByIdAndUpdate(req.session.currentUser._id, {
-      $push: { offers: updatedOffer._id },
-    });
 
     res.status(200).json(updatedOffer);
   } catch (error) {
