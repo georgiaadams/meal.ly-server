@@ -127,19 +127,25 @@ providerRouter.delete("/offers/:id", (req, res) => {
     return;
   }
 
-  Provider.findByIdAndUpdate(providerId, {$pull: { offers: id }}, {new: true}).then(() => {
-
-    Offer.findByIdAndRemove(id)
+  Provider.findByIdAndUpdate(
+    providerId,
+    { $pull: { offers: id } },
+    { new: true }
+  )
     .then(() => {
-      res
-        .status(201) //  Accepted
-        .send(`Offer ${id} was removed successfully.`);
+      Offer.findByIdAndRemove(id)
+        .then(() => {
+          res
+            .status(201) //  Accepted
+            .send(`Offer ${id} was removed successfully.`);
+        })
+        .catch((err) => {
+          res.status(400).json(err);
+        });
     })
     .catch((err) => {
       res.status(400).json(err);
     });
-
-  }).catch((err) => {res.status(400).json(err)});
 });
 
 module.exports = providerRouter;
