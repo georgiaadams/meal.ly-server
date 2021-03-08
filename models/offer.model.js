@@ -13,6 +13,7 @@ const offerSchema = new Schema({
   quantity: { type: String, required: true },
   date: { type: Date, default: Date.now, required: true },
   pickupSlot: { type: String, required: true },
+  comments: { type: String },
 });
 
 const Offer = mongoose.model("Offer", offerSchema);
