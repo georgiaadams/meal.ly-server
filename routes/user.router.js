@@ -41,8 +41,7 @@ userRouter.get(
   async (req, res, next) => {
     try {
       const pendingOffers = await Offer.find({
-        status: "ready",
-        status: "requested",
+        status: { $in: ["ready", "requested"] },
       });
       res.status(200).json(pendingOffers);
     } catch (error) {
@@ -67,13 +66,13 @@ userRouter.get(
 userRouter.put("/offers/status/update", isLoggedIn, async (req, res, next) => {
   // offer id, user id, provider id
   try {
-    const { offerId, comments, pickupSlot } = req.body;
+    const { offerId, comments, username } = req.body;
     const updatedOffer = await Offer.findByIdAndUpdate(
       offerId,
       {
         status: "requested",
         comments,
-        pickupSlot,
+        username,
       },
       { new: true }
     );
@@ -87,5 +86,31 @@ userRouter.put("/offers/status/update", isLoggedIn, async (req, res, next) => {
     res.status(400).json(error);
   }
 });
+
+userRouter.put(
+  "/offers/status/completed",
+  isLoggedIn,
+  async (req, res, next) => {
+    // offer id, user id, provider id
+    try {
+      const { offerId } = req.body;
+      const completedOffer = await Offer.findByIdAndUpdate(
+        offerId,
+        {
+          status: "completed",
+        },
+        { new: true }
+      );
+      // await User.findByIdAndUpdate(req.session.currentUser._id, {
+      //   $push: { offers: updatedOffer._id },
+      // });
+
+      res.status(200).json(completedOffer);
+    } catch (error) {
+      console.log(error);
+      res.status(400).json(error);
+    }
+  }
+);
 
 module.exports = userRouter;
