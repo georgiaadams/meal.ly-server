@@ -40,9 +40,16 @@ userRouter.get(
   isLoggedIn,
   async (req, res, next) => {
     try {
-      const pendingOffers = await Offer.find({
-        status: { $in: ["ready", "requested"] },
-      });
+      const { _id } = req.session.currentUser;
+      const user = await User.findById(_id).populate("offers");
+      console.log(user);
+      const pendingOffers = user.offers.filter((offer) =>
+        ["ready", "requested"].includes(offer.status)
+      );
+
+      // const pendingOffers = await Offer.find({
+      //   status: { $in: ["ready", "requested"] },
+      // });
       res.status(200).json(pendingOffers);
     } catch (error) {
       res.status(400).json(error);
