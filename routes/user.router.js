@@ -42,15 +42,13 @@ userRouter.get(
     try {
       const { _id } = req.session.currentUser;
       const user = await User.findById(_id).populate("offers");
-      console.log(user);
-      const pendingOffers = user.offers.filter((offer) =>
-        ["ready", "requested"].includes(offer.status)
-      );
-
-      // const pendingOffers = await Offer.find({
-      //   status: { $in: ["ready", "requested"] },
-      // });
-      res.status(200).json(pendingOffers);
+      const ready = [];
+      const requested = [];
+      const pendingOffers = user.offers.forEach((offer) => {
+        if (["ready"].includes(offer.status)) ready.push(offer);
+        if (["requested"].includes(offer.status)) requested.push(offer);
+      });
+      res.status(200).json({ ready, requested });
     } catch (error) {
       res.status(400).json(error);
     }
@@ -110,10 +108,6 @@ userRouter.put(
         },
         { new: true }
       );
-      // await User.findByIdAndUpdate(req.session.currentUser._id, {
-      //   $push: { offers: updatedOffer._id },
-      // });
-
       res.status(200).json(completedOffer);
     } catch (error) {
       console.log(error);

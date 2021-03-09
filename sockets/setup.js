@@ -22,16 +22,24 @@ function socketIOSetup(serverInstance) {
     // on - POST  emit - GET //
     socket.on("createOffer", (data) => {
       console.log(data);
-
       io.sockets.emit("newOffer", data);
     });
 
-    // socket.on("requestOffer", (data) => {
-    //   io.sockets.emit("offerRequested", { companyName: data.companyName });
-    // });
+    socket.on("requestOffer", (data) => {
+      io.sockets.emit("offerRequested", { companyName: data.companyName });
+    });
 
     socket.on("acceptOffer", (data) => {
-      io.socets.emit("offerAccepted", data);
+      console.log("Offer Accept Clicked");
+
+      io.sockets.emit("offerAccepted", data);
+    });
+
+    socket.on("collectOffer", (data) => {
+      console.log("Offer collected USER");
+
+      io.sockets.emit("offerCollected", data);
+      console.log("appear completed in provider");
     });
 
     socket.on("disconnect", () => {

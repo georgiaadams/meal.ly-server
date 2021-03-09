@@ -17,7 +17,6 @@ providerRouter.post("/offers", (req, res, next) => {
     date,
     pickupSlot,
     companyName,
-
     status: "new",
   })
     .then((newOfferDocument) => {
@@ -26,8 +25,6 @@ providerRouter.post("/offers", (req, res, next) => {
         { $push: { offers: newOfferDocument._id } },
         { new: true }
       ).then((theResponse) => {
-        console.log(newOfferDocument);
-
         res.status(201).json(newOfferDocument);
       });
     })
