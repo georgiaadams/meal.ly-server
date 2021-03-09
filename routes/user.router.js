@@ -55,7 +55,9 @@ userRouter.get(
   isLoggedIn,
   async (req, res, next) => {
     try {
+      // const currentUser = req.session.currentUser._id;
       const completedOffers = await Offer.find({ status: "completed" });
+      // currentUser.populate(completedOffers);
       res.status(200).json(completedOffers);
     } catch (error) {
       res.status(400).json(error);

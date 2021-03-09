@@ -8,7 +8,7 @@ const Offer = require("../models/offer.model");
 // POST '/api/provider/offers' => add a new offer
 
 providerRouter.post("/offers", (req, res, next) => {
-  const { content, quantity, date, pickupSlot, companyName, image } = req.body;
+  const { content, quantity, date, pickupSlot, companyName } = req.body;
   const { _id: providerId } = req.session.currentUser;
 
   Offer.create({
@@ -17,7 +17,7 @@ providerRouter.post("/offers", (req, res, next) => {
     date,
     pickupSlot,
     companyName,
-    image,
+
     status: "new",
   })
     .then((newOfferDocument) => {
@@ -26,7 +26,9 @@ providerRouter.post("/offers", (req, res, next) => {
         { $push: { offers: newOfferDocument._id } },
         { new: true }
       ).then((theResponse) => {
-        res.status(201).json(theResponse);
+        console.log(newOfferDocument);
+
+        res.status(201).json(newOfferDocument);
       });
     })
     .catch((err) => {

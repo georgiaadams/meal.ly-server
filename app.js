@@ -8,13 +8,10 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const MongoStore = require("connect-mongo")(session);
 const cors = require("cors");
-// const socketIo = require("socket.io");
-// const io = socketIo(server);
 
 const authRouter = require("./routes/auth.router");
 const userRouter = require("./routes/user.router");
 const providerRouter = require("./routes/provider.router");
-// const { Server } = require("http");
 
 // MONGOOSE CONNECTION
 mongoose

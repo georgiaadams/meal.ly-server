@@ -3,6 +3,7 @@
 /**
  * Module dependencies.
  */
+var socketIOSetup = require("./../sockets/setup");
 
 var app = require("../app");
 var debug = require("debug")(
@@ -22,6 +23,7 @@ app.set("port", port);
  */
 
 var server = http.createServer(app);
+socketIOSetup(server);
 
 /**
  * Listen on provided port, on all network interfaces.
