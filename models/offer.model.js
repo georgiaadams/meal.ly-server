@@ -14,8 +14,16 @@ const offerSchema = new Schema({
   date: { type: Date, default: Date.now, required: true },
   pickupSlot: { type: String, required: true },
   comments: { type: String },
+  // address: { type: String, default: "not provided" },
+  // location: {
+  //   type: {
+  //     type: String,
+  //   },
+  //   coordinates: { type: [Number], default: [41.3975248, 2.1910079] },
+  // },
 });
 
+offerSchema.index({ location: "2dsphere" });
 const Offer = mongoose.model("Offer", offerSchema);
 
 module.exports = Offer;

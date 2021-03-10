@@ -9,7 +9,7 @@ const Offer = require("../models/offer.model");
 
 providerRouter.post("/offers", (req, res, next) => {
   const { content, quantity, date, pickupSlot, companyName } = req.body;
-  const { _id: providerId } = req.session.currentUser;
+  const { _id: providerId } = req.session.currentUser; // pass location and address here and in the create
 
   Offer.create({
     content,
