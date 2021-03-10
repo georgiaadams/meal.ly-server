@@ -14,7 +14,7 @@ const offerSchema = new Schema({
   date: { type: Date, default: Date.now, required: true },
   pickupSlot: { type: String, required: true },
   comments: { type: String },
-  // address: { type: String, default: "not provided" },
+  address: { type: String, default: "not provided" },
   // location: {
   //   type: {
   //     type: String,
