@@ -8,8 +8,8 @@ const Offer = require("../models/offer.model");
 // POST '/api/provider/offers' => add a new offer
 
 providerRouter.post("/offers", (req, res, next) => {
-  const { content, quantity, date, pickupSlot, companyName, image } = req.body;
-  const { _id: providerId } = req.session.currentUser;
+  const { content, quantity, date, pickupSlot, companyName } = req.body;
+  const { _id: providerId } = req.session.currentUser; // pass location and address here and in the create
 
   Offer.create({
     content,
@@ -17,7 +17,6 @@ providerRouter.post("/offers", (req, res, next) => {
     date,
     pickupSlot,
     companyName,
-    image,
     status: "new",
   })
     .then((newOfferDocument) => {
@@ -26,7 +25,7 @@ providerRouter.post("/offers", (req, res, next) => {
         { $push: { offers: newOfferDocument._id } },
         { new: true }
       ).then((theResponse) => {
-        res.status(201).json(theResponse);
+        res.status(201).json(newOfferDocument);
       });
     })
     .catch((err) => {
@@ -93,7 +92,7 @@ providerRouter.get("/offers/:id", (req, res) => {
 
 providerRouter.put("/offers/:id", (req, res, next) => {
   const { id } = req.params;
-  const { content, quantity, date, pickupSlot, companyName, image } = req.body;
+  const { content, quantity, date, pickupSlot, companyName } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     res.status(400).json({ message: "Specified id is not valid" });
@@ -106,7 +105,6 @@ providerRouter.put("/offers/:id", (req, res, next) => {
     date,
     pickupSlot,
     companyName,
-    image,
   })
     .then(() => {
       res.status(201).send();
@@ -120,17 +118,28 @@ providerRouter.put("/offers/:id", (req, res, next) => {
 
 providerRouter.delete("/offers/:id", (req, res) => {
   const { id } = req.params;
+  const { _id: providerId } = req.session.currentUser;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     res.status(400).json({ message: "Specified id is not valid" });
     return;
   }
 
-  Offer.findByIdAndRemove(id)
+  Provider.findByIdAndUpdate(
+    providerId,
+    { $pull: { offers: id } },
+    { new: true }
+  )
     .then(() => {
-      res
-        .status(201) //  Accepted
-        .send(`Offer ${id} was removed successfully.`);
+      Offer.findByIdAndRemove(id)
+        .then(() => {
+          res
+            .status(201) //  Accepted
+            .send(`Offer ${id} was removed successfully.`);
+        })
+        .catch((err) => {
+          res.status(400).json(err);
+        });
     })
     .catch((err) => {
       res.status(400).json(err);

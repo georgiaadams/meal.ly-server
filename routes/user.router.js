@@ -40,10 +40,15 @@ userRouter.get(
   isLoggedIn,
   async (req, res, next) => {
     try {
-      const pendingOffers = await Offer.find({
-        status: { $in: ["ready", "requested"] },
+      const { _id } = req.session.currentUser;
+      const user = await User.findById(_id).populate("offers");
+      const ready = [];
+      const requested = [];
+      const pendingOffers = user.offers.forEach((offer) => {
+        if (["ready"].includes(offer.status)) ready.push(offer);
+        if (["requested"].includes(offer.status)) requested.push(offer);
       });
-      res.status(200).json(pendingOffers);
+      res.status(200).json({ ready, requested });
     } catch (error) {
       res.status(400).json(error);
     }
@@ -55,7 +60,9 @@ userRouter.get(
   isLoggedIn,
   async (req, res, next) => {
     try {
+      // const currentUser = req.session.currentUser._id;
       const completedOffers = await Offer.find({ status: "completed" });
+      // currentUser.populate(completedOffers);
       res.status(200).json(completedOffers);
     } catch (error) {
       res.status(400).json(error);
@@ -101,10 +108,6 @@ userRouter.put(
         },
         { new: true }
       );
-      // await User.findByIdAndUpdate(req.session.currentUser._id, {
-      //   $push: { offers: updatedOffer._id },
-      // });
-
       res.status(200).json(completedOffer);
     } catch (error) {
       console.log(error);

@@ -7,10 +7,17 @@ const providerSchema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   phoneNumber: { type: Number, required: true },
-  address: { type: String, required: true },
+  address: { type: String, default: "not provided" },
   offers: [{ type: Schema.Types.ObjectId, ref: "Offer" }],
+  // location: {
+  //   type: {
+  //     type: String,
+  //   },
+  //   coordinates: { type: [Number], default: [41.3975248, 2.1910079] },
+  // },
 });
 
+providerSchema.index({ location: "2dsphere" });
 const Provider = mongoose.model("Provider", providerSchema);
 
 module.exports = Provider;

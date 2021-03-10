@@ -23,7 +23,6 @@ router.post(
   async (req, res, next) => {
     try {
       const { firstName, lastName, email, password } = req.body;
-
       const user = await User.findOne({ email });
 
       if (user) {

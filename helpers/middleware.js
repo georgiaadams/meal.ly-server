@@ -16,7 +16,7 @@ exports.validateLogin = (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    next(createError(400));
+    next(createError(400, "Please provide your email and password"));
   } else next();
 };
 
