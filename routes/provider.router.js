@@ -5,9 +5,11 @@ const providerRouter = express.Router();
 const Provider = require("../models/provider.model");
 const Offer = require("../models/offer.model");
 
+const { isLoggedIn } = require("../helpers/middleware");
+
 // POST '/api/provider/offers' => add a new offer
 
-providerRouter.post("/offers", (req, res, next) => {
+providerRouter.post("/offers", isLoggedIn, (req, res, next) => {
   const {
     content,
     quantity,
@@ -45,7 +47,7 @@ providerRouter.post("/offers", (req, res, next) => {
 
 // GET '/api/provider/offers' => get all the offers for the current provider
 
-providerRouter.get("/offers", (req, res, next) => {
+providerRouter.get("/offers", isLoggedIn, (req, res, next) => {
   const { _id: providerId } = req.session.currentUser;
   Provider.findById(providerId)
     .populate("offers")
@@ -58,26 +60,57 @@ providerRouter.get("/offers", (req, res, next) => {
     });
 });
 
-providerRouter.put("/offers/status/update", async (req, res, next) => {
-  try {
-    const { offerId } = req.body;
-    const updatedOffer = await Offer.findByIdAndUpdate(
-      offerId,
-      {
-        status: "ready",
-      },
-      { new: true }
-    );
+providerRouter.put(
+  "/offers/status/update",
+  isLoggedIn,
+  async (req, res, next) => {
+    try {
+      const { offerId } = req.body;
+      const updatedOffer = await Offer.findByIdAndUpdate(
+        offerId,
+        {
+          status: "ready",
+        },
+        { new: true }
+      );
 
-    res.status(200).json(updatedOffer);
+      res.status(200).json(updatedOffer);
+    } catch (error) {
+      console.log(error);
+      res.status(400).json(error);
+    }
+  }
+);
+
+providerRouter.get("/myprofile", isLoggedIn, async (req, res, next) => {
+  try {
+    const providerId = req.session.currentUser._id;
+    const provider = await Provider.findById(providerId);
+    res.status(200).json(provider);
   } catch (error) {
     console.log(error);
     res.status(400).json(error);
   }
 });
+providerRouter.put("/myprofile/edit", isLoggedIn, async (req, res, next) => {
+  try {
+    const { companyName, email, address, phoneNumber } = req.body;
+    const providerId = req.session.currentUser._id;
+    const updatedUser = await User.findByIdAndUpdate(
+      providerId,
+      { companyName, email, address, phoneNumber },
+      { new: true }
+    );
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json(error);
+  }
+});
+
 // GET '/api/provider/offers/:id'  => get a specific offer by id
 
-providerRouter.get("/offers/:id", (req, res) => {
+providerRouter.get("/offers/:id", isLoggedIn, (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -98,7 +131,7 @@ providerRouter.get("/offers/:id", (req, res) => {
 
 // PUT '/api/provider/offers/:id' => update a specific offer
 
-providerRouter.put("/offers/:id", (req, res, next) => {
+providerRouter.put("/offers/:id", isLoggedIn, (req, res, next) => {
   const { id } = req.params;
   const {
     content,
@@ -114,16 +147,20 @@ providerRouter.put("/offers/:id", (req, res, next) => {
     return;
   }
 
-  Offer.findByIdAndUpdate(id, {
-    content,
-    quantity,
-    date,
-    pickupSlot,
-    companyName,
-    address,
-  })
-    .then(() => {
-      res.status(201).send();
+  Offer.findByIdAndUpdate(
+    id,
+    {
+      content,
+      quantity,
+      date,
+      pickupSlot,
+      companyName,
+      address,
+    },
+    { new: true }
+  )
+    .then((data) => {
+      res.status(200).json(data);
     })
     .catch((err) => {
       res.status(400).json(err);

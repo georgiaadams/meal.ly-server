@@ -60,9 +60,7 @@ userRouter.get(
   isLoggedIn,
   async (req, res, next) => {
     try {
-      // const currentUser = req.session.currentUser._id;
       const completedOffers = await Offer.find({ status: "completed" });
-      // currentUser.populate(completedOffers);
       res.status(200).json(completedOffers);
     } catch (error) {
       res.status(400).json(error);
@@ -115,5 +113,30 @@ userRouter.put(
     }
   }
 );
+userRouter.get("/profile", isLoggedIn, async (req, res, next) => {
+  try {
+    const userId = req.session.currentUser._id;
+    const user = await User.findById(userId);
+    res.status(200).json(user);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json(error);
+  }
+});
+userRouter.put("/profile/edit", isLoggedIn, async (req, res, next) => {
+  try {
+    const { firstName, lastName, email } = req.body;
+    const userId = req.session.currentUser._id;
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { firstName, lastName, email },
+      { new: true }
+    );
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json(error);
+  }
+});
 
 module.exports = userRouter;
