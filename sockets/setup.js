@@ -25,21 +25,21 @@ function socketIOSetup(serverInstance) {
       io.sockets.emit("newOffer", data);
     });
 
+    socket.on("editOffer", (data) => {
+      console.log("Form edit", data);
+      io.sockets.emit("offerEdited", data);
+    });
+
     socket.on("requestOffer", (data) => {
       io.sockets.emit("offerRequested", { companyName: data.companyName });
     });
 
     socket.on("acceptOffer", (data) => {
-      console.log("Offer Accept Clicked");
-
       io.sockets.emit("offerAccepted", data);
     });
 
     socket.on("collectOffer", (data) => {
-      console.log("Offer collected USER");
-
       io.sockets.emit("offerCollected", data);
-      console.log("appear completed in provider");
     });
 
     socket.on("disconnect", () => {
