@@ -3,7 +3,11 @@ const Schema = mongoose.Schema;
 
 const providerSchema = new Schema({
   companyName: { type: String, required: true },
-  image: { type: String, default: "/public/profileIcon.png" },
+  image: {
+    type: String,
+    default:
+      "https://res.cloudinary.com/skillbees/image/upload/v1615300366/Meal.ly/userprofile_n2bmnb.png",
+  },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   phoneNumber: { type: Number, required: true },
