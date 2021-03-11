@@ -65,23 +65,80 @@ User view:
 | `/provider/offers`          | ProviderPendingRequests | user only `<PrivateRoute>` | List of provider's offers: new, pending collection, requested pickup, completed |
 | `/provider/myprofile`       | ProviderProfile         | user only `<PrivateRoute>` | Provider details page                                        |
 
-### Components
+
+
+### Pages
+
+- Home
+
+- Login
 
 - UserLogin
-- ProviderLogin
+
+- Signup
+
 - UserSignup
-- ProviderSignup
-- SplashPage
-- Navbar
-- UserHomepage
+
+- ProfileEdit
+
+- ProfileEditUser
+
+- ProviderEditOffer
+
 - ProviderHomepage
+
+- ProviderNewOffer
+
+- ProviderOfferDetails
+
+- ProviderOffers
+
+- ProviderProfile
+
+- CompletedOffers
+
+- Homepage
+
+- OfferDetails
+
+- AllOffers
+
+- UserProfile
+
+- UserRequests
+
+  
+
+### Components
+
+- AcceptOffer
+
+- AnonRoute
+
+- BottomNavbar
+
+- Navbar
+
+- OfferCard
+
+- PickupRequest
+
+- PrivateRoute
+
+- ProviderLocation
+
+- RequestedOffers
+
+- CompleteOffer
+
+  
 
 ### Services
 
 Auth Service
 
-- authService.userLogin(username, password)
-- authService.providerLogin(username, password)
+- authService.userLogin(email, password)
+- authService.providerLogin(email, password)
 - authService.userSignup(firstName, lastName, email, password)
 - authService.providerSignup(companyName, address, phoneNumber, email, password)
 - authService.logout()
@@ -97,6 +154,8 @@ Provider Service
 - editOffer(id, { companyName, content, quantity, date, pickupSlot, address });
 - deleteOffer(id);
 - acceptOffer(id);
+- getProfile();
+- editProfile();
 
 
 
@@ -113,6 +172,10 @@ User Service
 - requestOffer();
 
 - completeOffer(id);
+
+- getProfile();
+
+- editProfile();
 
   
 
@@ -190,8 +253,12 @@ Offer model
 | GET         | `/api/user/offers/:id`                    | {id}                                                        | 200            | 400          | Show specific offer details                                  |
 | GET         | `/api/user/offers/status/completed`       | {}                                                          | 200            | 400          | Show all user offers with status "completed"                 |
 | GET         | `/api/user/offers/status/ready-requested` | {}                                                          | 200            | 400          | Showing all offers with status "ready and "requested"        |
+| GET         | `/api/user/profile`                       | {}                                                          | 200            | 400          | Showing user profile details                                 |
+| PUT         | `/api/user/profile/edit`                  | {firstName, lastName, email}                                | 200            | 400          | Editing user profile details                                 |
 | GET         | `/api/provider/offers`                    | {}                                                          | 200            | 400          | Show all new, requested, ready and completed offers from the current provider |
 | POST        | `/api/provider/offers`                    | {content, quantity, date, pickupSlot, companyName, address} | 201            | 404          | Add a new offer                                              |
 | GET         | `/api/provider/offers/:id`                | {id}                                                        | 200            | 400          | Show single offer details                                    |
 | PUT         | `/api/provider/offers/:id`                | {id, content, quantity, date, pickupSlot, companyName}      | 201            | 400          | Edit an offer                                                |
 | DELETE      | `/api/provider/offers/:id`                | (empty)                                                     | 201            | 400          | Delete an offer                                              |
+| GET         | `/api/provider/myprofile`                 | {}                                                          | 200            | 400          | Showing provider profile details                             |
+| PUT         | `/api/provider/myprofile/edit`            | {companyName, email, address, phoneNumber}                  | 200            | 400          | Editing provider profile details                             |
